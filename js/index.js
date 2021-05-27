@@ -2,12 +2,26 @@ const tipoVistaClientes = document.getElementById('tipo-vista-clientes');
 tipoVistaClientes.addEventListener('change', (event) => {
   const idVista = event.currentTarget.value;
 
+  mostrarLoader();
+
   if (idVista === 'table') {
     obtenerClientes().then(cargarClientesEnTabla);
   } else {
     obtenerClientes().then(cargarClientesEnSelect);
   }
 });
+
+function mostrarLoader() {
+  const loader = document.getElementById('loader');
+
+  loader.innerHTML = 'Cargando...';
+}
+
+function ocultarLoader() {
+  const loader = document.getElementById('loader');
+
+  loader.innerHTML = '';
+}
 
 async function obtenerClientes() {
   const url = 'https://jsonplaceholder.typicode.com/users';
@@ -38,6 +52,8 @@ function cargarClientesEnSelect(clientes) {
 
     obtenerCliente(idCliente);
   });
+
+  ocultarLoader();
 }
 
 function cargarClientesEnTabla(clientes) {
@@ -68,6 +84,8 @@ function cargarClientesEnTabla(clientes) {
   htmlDeLaTabla += '</tbody></table>';
 
   clientesContainer.innerHTML = htmlDeLaTabla;
+
+  ocultarLoader();
 }
 
 async function obtenerCliente(idCliente) {
