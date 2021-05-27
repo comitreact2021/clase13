@@ -1,3 +1,14 @@
+const tipoVistaClientes = document.getElementById('tipo-vista-clientes');
+tipoVistaClientes.addEventListener('change', (event) => {
+  const idVista = event.currentTarget.value;
+
+  if (idVista === 'table') {
+    obtenerClientes().then(cargarClientesEnTabla);
+  } else {
+    obtenerClientes().then(cargarClientesEnSelect);
+  }
+});
+
 async function obtenerClientes() {
   const url = 'https://jsonplaceholder.typicode.com/users';
 
@@ -7,7 +18,7 @@ async function obtenerClientes() {
   return clientes;
 }
 
-function cargarClientes(clientes) {
+function cargarClientesEnSelect(clientes) {
   const clientesContainer = document.getElementById('clientes-container');
 
   let htmlDelSelect = '<select id="select-clientes">';
@@ -27,6 +38,36 @@ function cargarClientes(clientes) {
 
     obtenerCliente(idCliente);
   });
+}
+
+function cargarClientesEnTabla(clientes) {
+  const clientesContainer = document.getElementById('clientes-container');
+
+  const infoCliente = document.getElementById('info-cliente');
+
+  infoCliente.innerHTML = '';
+
+  let htmlDeLaTabla = `<table class="table">
+                         <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Usuario</th>
+                                <th>E-mail</th>
+                            </tr>
+                         </thead>
+                         <tbody>`;
+
+  for (cliente of clientes) {
+    htmlDeLaTabla += `<tr>
+                        <td>${cliente.name}</td>
+                        <td>${cliente.username}</td>
+                        <td>${cliente.email}</td>
+                      </tr>`;
+  }
+
+  htmlDeLaTabla += '</tbody></table>';
+
+  clientesContainer.innerHTML = htmlDeLaTabla;
 }
 
 async function obtenerCliente(idCliente) {
@@ -49,5 +90,3 @@ function mostrarInfoCliente(cliente) {
 
   infoClienteContainer.innerHTML = infoCliente;
 }
-
-obtenerClientes().then(cargarClientes);
